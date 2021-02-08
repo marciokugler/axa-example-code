@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Unfit Fitness App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- vendor:css -->
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css" media="all">
+  <!-- endinject --> 
+  <!-- inject:css -->
+  <link rel="stylesheet" type="text/css" href="css/unfit.css" media="all">
+  <!-- endinject -->
+  </style>
+</head>
+
+<body>
+  <div class="navbar-wrapper" ng-cloak>
+    <div class="container">
+      <nav class="navbar navbar-inverse navbar-static-top" ng-controller="NavController">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+              aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              </button>
+            <a ng-hide="isLoggedIn()" id="link.home" class="navbar-brand" href="index.html"><span class="logo">UNFIT</span></a>
+            <a ng-show="isLoggedIn()" id="link.home" class="navbar-brand" ui-sref="dashboard"><span class="logo">UNFIT</span></a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li ng-show="isLoggedIn()" ng-class="{active: $state.includes('activities')}"><a ui-sref="activities" id="link.activities">Activities</a></li>
+              <li ng-show="isPremium()" ng-class="{active: $state.includes('meals')}"><a ui-sref="meals ({userId: currentUserId})" id="link.meals">Meals</a></li>
+			  <li ><a ui-sref="config" id="link.config">Config</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li ng-hide="isLoggedIn()" ng-class="{active: $state.includes('login')}"><a ui-sref="login" id="link.login">Login</a></li>
+              <li ng-show="isLoggedIn()"><a ui-sref="profile ({userId: currentUserId})" id="link.user">{{currentUser()}}<span class="glyphicon glyphicon-user" style="font-size: 18px; float: right; margin-left: 3px;" aria-hidden="true"></span></a></li>
+              <li ng-show="isLoggedIn()"><a id="link.logout" ng-click="logout()">Logout</a>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <span id="loading-spinner" class="spinner-container" ng-if="!appReady"></span>
+
+  <span us-spinner spinner-key="page-spinner" class="spinner-container" ng-cloak></span>
+
+  <div ui-view ng-cloak></div>
+
+  <div ng-controller="UseCaseController" ng-cloak>
+    <div class="drawer-tab">
+      <div class="content"><span class="glyphicon glyphicon-cog" ng-click="toggleDrawer()" aria-hidden="true"></span></div>
+    </div>
+
+    <div pageslide ps-open="isDrawerOpen" ps-side="right" ps-class="drawer" ps-auto-close="true" ps-body-class="true" ps-key-listener="true"
+      ps-click-outside="true" ps-size="270px" ng-style="style" ng-cloak>
+      <div class="container" style="width: 270px">
+        <h3>Use Cases</h3>
+        <div ng-repeat="usecase in usecases">
+          <div class="bs-callout bs-callout-default" ng-click="toggleUseCase(usecase.id)" style="cursor: pointer" ng-class="{'bs-callout-success': usecase.active}">
+            <h5>{{usecase.name}}</h5>
+            <small>{{usecase.description}}</small>
+          </div>
+        </div>
+        <button class="btn btn-primary" ng-click="closeDrawer()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- camdo:js -->
+  <script src="js/camdo.min.js"></script>
+  <!-- endinject -->
+  
+  <!-- vendor.na:js -->
+  <script src="bower_components/spin.js/spin.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <!-- endinject -->
+
+  <script>
+    // load spinner while angular bootstraps
+    var span = document.getElementById("loading-spinner");
+    var spinner = new Spinner().spin(span);
+  </script>
+
+  <!-- vendor:js -->
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/angular-jwt/dist/angular-jwt.js"></script>
+  <script src="bower_components/Chart.js/dist/Chart.js"></script>
+  <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
+  <script src="bower_components/angular-spinner/dist/angular-spinner.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/angular-pageslide-directive/dist/angular-pageslide-directive.js"></script>
+  <!-- endinject -->
+
+  <!-- inject:js -->
+  <script src="js/app.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/services.js"></script>
+  <!-- endinject -->
+
+  <script>
+    // close menu dropdown when click away
+    $(document).on('click', function () {
+      $('.collapse').collapse('hide');
+    })
+  </script>
+</body>
+
+</html>
